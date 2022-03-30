@@ -1,15 +1,15 @@
 import {
-  takeEvery,
+  //takeEvery,
   takeLatest,
-  take,
-  call,
+  //take,
+  // call,
   put,
   fork,
 } from "redux-saga/effects";
 import { select } from "redux-saga/effects";
-import * as api from "../api/auth";
-import axios from "axios";
-import { encodeEmail } from "../lib/encodeEmail";
+//import * as api from "../api/auth";
+//import axios from "axios";
+//import { encodeEmail } from "../lib/encodeEmail";
 
 import {
   ChangeNoteRequest,
@@ -18,7 +18,7 @@ import {
 } from "../actions/notes/types";
 import * as actions from "../actions/notes/notes";
 import { INoteState } from "../reducers/interfaces/INoteState";
-import { INote } from "../interfaces/INote";
+//import { INote } from "../interfaces/INote";
 
 function* fetchNotes() {
   /*const state: INoteState = yield select();

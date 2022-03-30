@@ -1,62 +1,63 @@
 import {
   takeEvery,
-  takeLatest,
-  take,
-  call,
+  //takeLatest,
+  //take,
+  //call,
   put,
   fork,
 } from "redux-saga/effects";
 import {
   AuthTypes,
   AutoLogoutRequest,
-  GetAuthRequest,
+  //GetAuthRequest,
 } from "../actions/auth/types";
 
-import * as api from "../api/auth";
+//import * as api from "../api/auth";
 import * as actions from "../actions/auth/auth";
-
+/*
 function* getAuth({ email, password, name, surname }: GetAuthRequest) {
-  const isRegistration = name != null;
-  const api_key = process.env.API_KEY;
+ const isRegistration = name != null;
+ const api_key = process.env.API_KEY;
 
-  let url = `https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=${api_key}`;
+ let url = `https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=${api_key}`;
 
-  if (isRegistration) {
-    url = `https://www.googleapis.com/identitytoolkit/v3/relyingparty/signupNewUser?key=${api_key}`;
-  }
+ if (isRegistration) {
+   url = `https://www.googleapis.com/identitytoolkit/v3/relyingparty/signupNewUser?key=${api_key}`;
+ }
 
-  /*const authResult = yield call(api.getAuth, { url, email, password });
+const authResult = yield call(api.getAuth, { url, email, password });
 
-  const idToken: string = authResult.data.data?.idToken;
-  const localId: string = authResult.data.data?.localId;
-  const expiresIn: number = authResult.data.data?.expiresIn;
 
-  if (isRegistration) {
-    yield call(api.saveUserData, { name, email, surname });
-  } else {
-    const userDataResult = yield call(api.getUserData, { email });
-    name = userDataResult.data.name;
-    surname = userDataResult.data.surname;
-  }
+const idToken: string = authResult.data.data?.idToken;
+const localId: string = authResult.data.data?.localId;
+const expiresIn: number = authResult.data.data?.expiresIn;
 
-  const expirationDate = new Date(new Date().getTime() + expiresIn * 1000);
-
-  let userName = name ? name : "";
-  if (surname != null && surname.length > 0) userName += " " + surname;
-
-  localStorage.setItem("token", idToken);
-  localStorage.setItem("userId", localId);
-  localStorage.setItem("expirationDate", expirationDate.toString());
-  localStorage.setItem("email", email);
-  localStorage.setItem("userName", userName);
-
-  yield put(actions.getAuthSuccess({ email, userName, token: idToken }));
-  yield put(actions.autoLogoutRequest({ time: expiresIn }));*/
+if (isRegistration) {
+  yield call(api.saveUserData, { name, email, surname });
+} else {
+  const userDataResult = yield call(api.getUserData, { email });
+  name = userDataResult.data.name;
+  surname = userDataResult.data.surname;
 }
 
-function* watchGetAuthRequest() {
-  yield takeEvery(AuthTypes.GET_AUTH_REQUEST, getAuth);
+const expirationDate = new Date(new Date().getTime() + expiresIn * 1000);
+
+let userName = name ? name : "";
+if (surname != null && surname.length > 0) userName += " " + surname;
+
+localStorage.setItem("token", idToken);
+localStorage.setItem("userId", localId);
+localStorage.setItem("expirationDate", expirationDate.toString());
+localStorage.setItem("email", email);
+localStorage.setItem("userName", userName);
+
+yield put(actions.getAuthSuccess({ email, userName, token: idToken }));
+yield put(actions.autoLogoutRequest({ time: expiresIn }));
 }
+*/
+// function* watchGetAuthRequest() {
+//   yield takeEvery(AuthTypes.GET_AUTH_REQUEST, getAuth);
+// }
 
 function* autoLogin() {
   const token = localStorage.getItem("token");
@@ -113,7 +114,7 @@ function* watchLogoutRequest() {
 }
 
 const authSagas = [
-  fork(watchGetAuthRequest),
+  //fork(watchGetAuthRequest),
   fork(watchAutoLoginRequest),
   fork(watchAutoLogoutRequest),
   fork(watchLogoutRequest),

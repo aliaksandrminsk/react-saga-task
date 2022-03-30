@@ -4,7 +4,7 @@ import "./index";
 import "./scss/styles";
 import App from "./App";
 import { Provider } from "react-redux";
-import { createStore, applyMiddleware, AnyAction, compose } from "redux";
+import { createStore, applyMiddleware, compose } from "redux";
 import { BrowserRouter } from "react-router-dom";
 import createSagaMiddleware from "redux-saga";
 import rootSaga from "./sagas";
