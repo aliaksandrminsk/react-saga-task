@@ -1,7 +1,7 @@
-import React, { Component } from "react";
+import React, { Component, useEffect } from "react";
 import Layout from "./hoc/Layout/Layout";
 import { Route, Routes } from "react-router-dom";
-import { connect } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import LoginForm from "./containers/Auth/LoginForm";
 import RegisterForm from "./containers/Auth/RegisterForm";
 import Notes from "./containers/Notes/Notes";
@@ -11,48 +11,35 @@ import { AutoLoginRequest } from "./actions/auth/types";
 import { autoLoginRequest } from "./actions/auth/auth";
 import { IApplicationState } from "./reducers";
 
-interface DispatchProps {
-  autoLoginRequest: () => AutoLoginRequest;
-}
+const App = () => {
+  const dispatch = useDispatch();
+  const isAuthenticated = useSelector<IApplicationState, boolean>(
+    (state) => !!state.auth.token
+  );
 
-interface StateProps {
-  isAuthenticated: boolean;
-  email: string;
-}
+  useEffect(() => {
+    dispatch(autoLoginRequest());
+  }, []);
 
-function mapStateToProps(state: IApplicationState): StateProps {
-  return {
-    isAuthenticated: !!state.auth.token,
-    email: state.auth.email,
-  };
-}
+  let routes = (
+    <Routes>
+      <Route path="register" element={<RegisterForm />} />
+      <Route path="login" element={<LoginForm />} />
+      <Route path="*" element={<Navigate to="/login" />} />
+    </Routes>
+  );
 
-class App extends Component<DispatchProps & StateProps> {
-  componentDidMount() {
-    return this.props.autoLoginRequest();
-  }
-
-  render() {
-    let routes = (
+  if (isAuthenticated) {
+    routes = (
       <Routes>
-        <Route path="register" element={<RegisterForm />} />
-        <Route path="login" element={<LoginForm />} />
-        <Route path="*" element={<Navigate to="/login" />} />
+        <Route path="list" element={<Notes />} />
+        <Route path="logout" element={<Logout />} />
+        <Route path="*" element={<Navigate to="/list" />} />
       </Routes>
     );
-
-    if (this.props.isAuthenticated) {
-      routes = (
-        <Routes>
-          <Route path="list" element={<Notes />} />
-          <Route path="logout" element={<Logout />} />
-          <Route path="*" element={<Navigate to="/list" />} />
-        </Routes>
-      );
-    }
-
-    return <Layout>{routes}</Layout>;
   }
-}
 
-export default connect(mapStateToProps, { autoLoginRequest })(App);
+  return <Layout>{routes}</Layout>;
+};
+
+export default App;

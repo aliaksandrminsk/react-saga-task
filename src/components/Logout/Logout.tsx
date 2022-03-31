@@ -1,27 +1,16 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
+import React, { useEffect } from "react";
+import { useDispatch } from "react-redux";
 import { Navigate } from "react-router-dom";
 import { logoutRequest } from "../../actions/auth/auth";
-import { LogoutRequest } from "../../actions/auth/types";
 
-interface DispatchProps {
-  logoutRequest: () => LogoutRequest;
-}
+const Logout: React.FC = () => {
+  const dispatch = useDispatch();
 
-// function mapDispatchToProps() {
-//   return {
-//     logout: () => logoutRequest(),
-//   };
-// }
+  useEffect(() => {
+    dispatch(logoutRequest());
+  }, []);
 
-class Logout extends Component<DispatchProps> {
-  componentDidMount() {
-    this.props.logoutRequest();
-  }
+  return <Navigate to="/login" replace />;
+};
 
-  render() {
-    return <Navigate to="/login" replace />;
-  }
-}
-
-export default connect(null, { logoutRequest })(Logout);
+export default Logout;

@@ -7,7 +7,6 @@ import { Form } from "./Form";
 import { errorRequest, getAuthRequest } from "../../actions/auth/auth";
 import { ErrorRequest, GetAuthRequest } from "../../actions/auth/types";
 import { IApplicationState } from "../../reducers";
-//import { IApplicationState } from "../../reducers";
 
 interface DispatchProps {
   getAuthRequest: ({

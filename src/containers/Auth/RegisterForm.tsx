@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 import { IFormControls } from "./IFormControl";
 import { Form } from "./Form";
 
-import { getAuthRequest } from "../../actions/auth/auth";
+import { errorRequest, getAuthRequest } from "../../actions/auth/auth";
 import { ErrorRequest, GetAuthRequest } from "../../actions/auth/types";
 import { IApplicationState } from "../../reducers";
 
@@ -154,4 +154,6 @@ class RegisterForm extends Form<Props, IFormControls> {
   }
 }
 
-export default connect(mapStateToProps, { getAuthRequest })(RegisterForm);
+export default connect(mapStateToProps, { getAuthRequest, errorRequest })(
+  RegisterForm
+);
