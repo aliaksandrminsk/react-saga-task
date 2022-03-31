@@ -1,21 +1,30 @@
 import { combineReducers, Reducer } from "redux";
 import authReducer from "./auth";
 import noteReducer from "./notes";
-import { INoteState } from "./interfaces/INoteState";
-import { IAuthState } from "./interfaces/IAuthState";
+import { INote } from "../interfaces/INote";
 
-export interface ApplicationState {
+export interface IApplicationState {
   note: INoteState;
   auth: IAuthState;
 }
 
-// export default combineReducers({
-//   auth: AuthReducer,
-//   notes: NotesReducer,
-// });
+export interface IAuthState {
+  token: string | null;
+  email: string;
+  userName: string;
+  serverErrorMessage: string;
+}
 
-export const reducers: Reducer<ApplicationState> =
-  combineReducers<ApplicationState>({
+export interface INoteState {
+  notes: Array<INote>;
+  updatedNotes: Array<INote>;
+  loading: boolean;
+  errorMessage: string;
+  filter: string;
+}
+
+export const reducers: Reducer<IApplicationState> =
+  combineReducers<IApplicationState>({
     note: noteReducer,
     auth: authReducer,
   });

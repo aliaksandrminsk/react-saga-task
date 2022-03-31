@@ -1,7 +1,7 @@
 import React, { Component, ReactChild, ReactChildren } from "react";
 import { connect } from "react-redux";
 import Menu from "../../components/Menu/Menu";
-import { IAuthState } from "../../reducers/interfaces/IAuthState";
+import { IApplicationState } from "../../reducers";
 
 interface StateProps {
   isAuthenticated: boolean;
@@ -12,7 +12,7 @@ interface OwnProps {
   children: ReactChild | ReactChildren;
 }
 
-function mapStateToProps({ auth }: { auth: IAuthState }): StateProps {
+function mapStateToProps({ auth }: IApplicationState): StateProps {
   return {
     isAuthenticated: !!auth.token,
     userName: auth.userName,

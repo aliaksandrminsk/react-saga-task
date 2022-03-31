@@ -5,18 +5,18 @@ import { logoutRequest } from "../../actions/auth/auth";
 import { LogoutRequest } from "../../actions/auth/types";
 
 interface DispatchProps {
-  logout: () => LogoutRequest;
+  logoutRequest: () => LogoutRequest;
 }
 
-function mapDispatchToProps() {
-  return {
-    logout: () => logoutRequest(),
-  };
-}
+// function mapDispatchToProps() {
+//   return {
+//     logout: () => logoutRequest(),
+//   };
+// }
 
 class Logout extends Component<DispatchProps> {
   componentDidMount() {
-    return this.props.logout();
+    this.props.logoutRequest();
   }
 
   render() {
@@ -24,4 +24,4 @@ class Logout extends Component<DispatchProps> {
   }
 }
 
-export default connect(null, mapDispatchToProps)(Logout);
+export default connect(null, { logoutRequest })(Logout);

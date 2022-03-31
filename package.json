@@ -1,7 +1,7 @@
 {
-  "name": "react-redux-bootstrap-task",
+  "name": "react-saga-task",
   "version": "1.0.0",
-  "description": "The package shows how to use Redux-Thunk along with TypeScript language.",
+  "description": "The package shows how to use Redux-Saga along with TypeScript language.",
   "private": true,
   "keywords": [
     "js",
@@ -18,8 +18,8 @@
     "@types/redux-saga": "^0.10.5",
     "axios": "^0.26.1",
     "is_js": "^0.9.0",
-    "react": "^18.0.0",
-    "react-dom": "^18.0.0",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
     "react-redux": "^7.2.6",
     "react-router-dom": "^6.2.2",
     "redux": "^4.1.2",

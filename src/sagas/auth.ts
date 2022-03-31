@@ -2,62 +2,116 @@ import {
   takeEvery,
   //takeLatest,
   //take,
-  //call,
+  call,
   put,
   fork,
 } from "redux-saga/effects";
 import {
   AuthTypes,
   AutoLogoutRequest,
-  //GetAuthRequest,
+  GetAuthRequest,
 } from "../actions/auth/types";
 
-//import * as api from "../api/auth";
+import * as api from "../api/auth";
 import * as actions from "../actions/auth/auth";
-/*
+
 function* getAuth({ email, password, name, surname }: GetAuthRequest) {
- const isRegistration = name != null;
- const api_key = process.env.API_KEY;
+  const isRegistration = name != null;
+  const api_key = process.env.API_KEY;
 
- let url = `https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=${api_key}`;
+  let url = `https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=${api_key}`;
 
- if (isRegistration) {
-   url = `https://www.googleapis.com/identitytoolkit/v3/relyingparty/signupNewUser?key=${api_key}`;
- }
+  if (isRegistration) {
+    url = `https://www.googleapis.com/identitytoolkit/v3/relyingparty/signupNewUser?key=${api_key}`;
+  }
 
-const authResult = yield call(api.getAuth, { url, email, password });
+  const { data, serverErrorMessage } = yield call(api.getAuth, {
+    url,
+    email,
+    password,
+  });
 
+  console.log("serverErrorMessage=", serverErrorMessage);
 
-const idToken: string = authResult.data.data?.idToken;
-const localId: string = authResult.data.data?.localId;
-const expiresIn: number = authResult.data.data?.expiresIn;
+  if (serverErrorMessage != null) {
+    yield put(actions.errorRequest({ serverErrorMessage }));
+  } else {
+    const idToken: string = data.idToken;
+    const localId: string = data.localId;
+    const expiresIn: number = data.expiresIn;
 
-if (isRegistration) {
-  yield call(api.saveUserData, { name, email, surname });
-} else {
-  const userDataResult = yield call(api.getUserData, { email });
-  name = userDataResult.data.name;
-  surname = userDataResult.data.surname;
+    if (isRegistration) {
+      yield call(api.saveUserData, {
+        email: "",
+        name: name ?? "",
+        surname: surname ?? "",
+      });
+    } else {
+      const { data: userData } = yield call(api.getUserData, { email });
+      name = userData.name;
+      surname = userData.surname;
+    }
+
+    const expirationDate = new Date(new Date().getTime() + expiresIn * 1000);
+
+    let userName = name ? name : "";
+    if (surname != null && surname.length > 0) userName += " " + surname;
+
+    localStorage.setItem("token", idToken);
+    localStorage.setItem("userId", localId);
+    localStorage.setItem("expirationDate", expirationDate.toString());
+    localStorage.setItem("email", email);
+    localStorage.setItem("userName", userName);
+
+    yield put(actions.getAuthSuccess({ email, userName, token: idToken }));
+    yield put(actions.autoLogoutRequest({ time: expiresIn }));
+  }
+
+  // return yield call(api.getAuth, { url, email, password })
+  //   .then((response) => {
+  //     idToken = response.data?.idToken;
+  //     localId = response.data?.localId;
+  //     expiresIn = response.data?.expiresIn;
+  //
+  //     if (isRegistration) {
+  //       return axios.put(
+  //         `${process.env.AXIOS_BASE_URL}/users/${encodeEmail(email)}.json`,
+  //         {
+  //           name: name,
+  //           surname: surname,
+  //         }
+  //       );
+  //     } else {
+  //       return axios.get(
+  //         `${process.env.AXIOS_BASE_URL}/users/${encodeEmail(email)}.json`
+  //       );
+  //     }
+  //   })
+  //   .then((response) => {
+  //     if (!isRegistration) {
+  //       name = response.data.name;
+  //       surname = response.data.surname;
+  //     }
+  //
+  //     const expirationDate = new Date(new Date().getTime() + expiresIn * 1000);
+  //
+  //     let userName = name ? name : "";
+  //     if (surname != null && surname.length > 0) userName += " " + surname;
+  //
+  //     localStorage.setItem("token", idToken);
+  //     localStorage.setItem("userId", localId);
+  //     localStorage.setItem("expirationDate", expirationDate.toString());
+  //     localStorage.setItem("email", email);
+  //     localStorage.setItem("userName", userName);
+  //
+  //     dispatch(authSuccess(idToken, email, userName));
+  //     dispatch(autoLogout(expiresIn));
+  //   });
 }
 
-const expirationDate = new Date(new Date().getTime() + expiresIn * 1000);
-
-let userName = name ? name : "";
-if (surname != null && surname.length > 0) userName += " " + surname;
-
-localStorage.setItem("token", idToken);
-localStorage.setItem("userId", localId);
-localStorage.setItem("expirationDate", expirationDate.toString());
-localStorage.setItem("email", email);
-localStorage.setItem("userName", userName);
-
-yield put(actions.getAuthSuccess({ email, userName, token: idToken }));
-yield put(actions.autoLogoutRequest({ time: expiresIn }));
+function* watchGetAuthRequest() {
+  yield takeEvery(AuthTypes.GET_AUTH_REQUEST, getAuth);
 }
-*/
-// function* watchGetAuthRequest() {
-//   yield takeEvery(AuthTypes.GET_AUTH_REQUEST, getAuth);
-// }
 
 function* autoLogin() {
   const token = localStorage.getItem("token");
@@ -89,7 +143,7 @@ function* watchAutoLoginRequest() {
   yield takeEvery(AuthTypes.AUTO_LOGIN_REQUEST, autoLogin);
 }
 
-function* autoLogout({ time }: AutoLogoutRequest) {
+function autoLogout({ time }: AutoLogoutRequest) {
   setTimeout(() => {
     logout();
   }, time * 1000);
@@ -106,7 +160,7 @@ function* logout() {
   localStorage.removeItem("email");
   localStorage.removeItem("userName");
 
-  yield put(actions.logoutRequest());
+  yield put(actions.logoutSuccess());
 }
 
 function* watchLogoutRequest() {
@@ -114,7 +168,7 @@ function* watchLogoutRequest() {
 }
 
 const authSagas = [
-  //fork(watchGetAuthRequest),
+  fork(watchGetAuthRequest),
   fork(watchAutoLoginRequest),
   fork(watchAutoLogoutRequest),
   fork(watchLogoutRequest),

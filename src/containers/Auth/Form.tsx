@@ -60,10 +60,11 @@ export class Form<T, P extends IFormControls> extends Component<T, P> {
 
     this.setState({
       ...this.state,
-      serverErrorMessage: "",
+      //serverErrorMessage: "",
       formControls,
       isFormValid,
     });
+    //this.props.errorRequest({ serverErrorMessage: "" });
   };
 
   renderInputs() {

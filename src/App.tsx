@@ -9,10 +9,10 @@ import Logout from "./components/Logout/Logout";
 import { Navigate } from "react-router-dom";
 import { AutoLoginRequest } from "./actions/auth/types";
 import { autoLoginRequest } from "./actions/auth/auth";
-import { IAuthState } from "./reducers/interfaces/IAuthState";
+import { IApplicationState } from "./reducers";
 
 interface DispatchProps {
-  autoLogin: () => AutoLoginRequest;
+  autoLoginRequest: () => AutoLoginRequest;
 }
 
 interface StateProps {
@@ -20,22 +20,16 @@ interface StateProps {
   email: string;
 }
 
-function mapStateToProps({ auth }: { auth: IAuthState }): StateProps {
+function mapStateToProps(state: IApplicationState): StateProps {
   return {
-    isAuthenticated: !!auth.token,
-    email: auth.email,
-  };
-}
-
-function mapDispatchToProps(): DispatchProps {
-  return {
-    autoLogin: () => autoLoginRequest(),
+    isAuthenticated: !!state.auth.token,
+    email: state.auth.email,
   };
 }
 
 class App extends Component<DispatchProps & StateProps> {
   componentDidMount() {
-    return this.props.autoLogin();
+    return this.props.autoLoginRequest();
   }
 
   render() {
@@ -61,4 +55,4 @@ class App extends Component<DispatchProps & StateProps> {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default connect(mapStateToProps, { autoLoginRequest })(App);

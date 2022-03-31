@@ -6,8 +6,8 @@ import {
   changeNoteRequest,
   removeNoteRequest,
 } from "../../actions/notes/notes";
-import { INoteState } from "../../reducers/interfaces/INoteState";
 import { INote } from "../../interfaces/INote";
+import { INoteState } from "../../reducers";
 
 interface OwnProps {
   getFilteredNotes: (filter: string) => Array<INote>;

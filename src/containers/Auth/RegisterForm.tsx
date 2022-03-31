@@ -7,27 +7,54 @@ import { Form } from "./Form";
 
 import { getAuthRequest } from "../../actions/auth/auth";
 import { GetAuthRequest } from "../../actions/auth/types";
+import { IApplicationState } from "../../reducers";
+
+// interface DispatchProps {
+//   auth: (
+//     email: string,
+//     password: string,
+//     name: string,
+//     surname: string
+//   ) => GetAuthRequest;
+// }
 
 interface DispatchProps {
-  auth: (
-    email: string,
-    password: string,
-    name: string,
-    surname: string
-  ) => GetAuthRequest;
+  getAuthRequest: ({
+    email,
+    password,
+    name,
+    surname,
+  }: {
+    email: string;
+    password: string;
+    name: string;
+    surname: string;
+  }) => GetAuthRequest;
 }
 
-function mapDispatchToProps(): DispatchProps {
+interface StateProps {
+  serverErrorMessage: string;
+}
+
+type Props = StateProps & DispatchProps;
+
+function mapStateToProps(state: IApplicationState): StateProps {
   return {
-    auth: (email: string, password: string, name: string, surname: string) =>
-      getAuthRequest(email, password, name, surname),
+    serverErrorMessage: state.auth.serverErrorMessage,
   };
 }
 
-class RegisterForm extends Form<DispatchProps, IFormControls> {
+// function mapDispatchToProps(): DispatchProps {
+//   return {
+//     auth: (email: string, password: string, name: string, surname: string) =>
+//       getAuthRequest({ email, password, name, surname }),
+//   };
+// }
+
+class RegisterForm extends Form<Props, IFormControls> {
   state = {
     isFormValid: false,
-    serverErrorMessage: "",
+    //serverErrorMessage: "",
     formControls: {
       email: {
         value: "",
@@ -74,12 +101,12 @@ class RegisterForm extends Form<DispatchProps, IFormControls> {
   };
 
   registerHandler = () =>
-    this.props.auth(
-      this.state.formControls.email.value,
-      this.state.formControls.password.value,
-      this.state.formControls.name.value,
-      this.state.formControls.surname.value
-    );
+    this.props.getAuthRequest({
+      email: this.state.formControls.email.value,
+      password: this.state.formControls.password.value,
+      name: this.state.formControls.name.value,
+      surname: this.state.formControls.surname.value,
+    });
   // .catch(({ response }) => {
   //   let serverErrorMessage = "";
   //   switch (response?.data?.error?.message) {
@@ -110,9 +137,9 @@ class RegisterForm extends Form<DispatchProps, IFormControls> {
             >
               Next
             </Button>
-            {this.state.serverErrorMessage.trim().length > 0 ? (
+            {this.props.serverErrorMessage.trim().length > 0 ? (
               <div className={classes.Error}>
-                {this.state.serverErrorMessage}
+                {this.props.serverErrorMessage}
               </div>
             ) : null}
           </form>
@@ -122,4 +149,4 @@ class RegisterForm extends Form<DispatchProps, IFormControls> {
   }
 }
 
-export default connect(null, mapDispatchToProps)(RegisterForm);
+export default connect(mapStateToProps, { getAuthRequest })(RegisterForm);

@@ -4,23 +4,50 @@ import Button from "../../components/UI/Button/Button";
 import { connect } from "react-redux";
 import { IFormControls } from "./IFormControl";
 import { Form } from "./Form";
-import { getAuthRequest } from "../../actions/auth/auth";
-import { GetAuthRequest } from "../../actions/auth/types";
+import { errorRequest, getAuthRequest } from "../../actions/auth/auth";
+import { ErrorRequest, GetAuthRequest } from "../../actions/auth/types";
+import { IApplicationState } from "../../reducers";
+//import { IApplicationState } from "../../reducers";
 
 interface DispatchProps {
-  auth: (email: string, password: string) => GetAuthRequest;
+  getAuthRequest: ({
+    email,
+    password,
+  }: {
+    email: string;
+    password: string;
+  }) => GetAuthRequest;
+  errorRequest: ({
+    serverErrorMessage,
+  }: {
+    serverErrorMessage: string;
+  }) => ErrorRequest;
 }
 
-function mapDispatchToProps(): DispatchProps {
+interface StateProps {
+  serverErrorMessage: string;
+}
+
+function mapStateToProps(state: IApplicationState): StateProps {
   return {
-    auth: (email: string, password: string) => getAuthRequest(email, password),
+    serverErrorMessage: state.auth.serverErrorMessage,
   };
 }
 
-class LoginForm extends Form<DispatchProps, IFormControls> {
+type Props = StateProps & DispatchProps;
+
+//
+// function mapDispatchToProps(): DispatchProps {
+//   return {
+//     auth: (email: string, password: string) =>
+//       getAuthRequest({ email, password }),
+//   };
+// }
+
+class LoginForm extends Form<Props, IFormControls> {
   state = {
     isFormValid: false,
-    serverErrorMessage: "",
+    //serverErrorMessage: "",
     formControls: {
       email: {
         value: "",
@@ -49,32 +76,32 @@ class LoginForm extends Form<DispatchProps, IFormControls> {
     },
   };
 
-  loginHandler = () =>
-    this.props.auth(
-      this.state.formControls.email.value,
-      this.state.formControls.password.value
-    );
-  // .catch(({ response }) => {
-  //   let serverErrorMessage = "";
-  //   switch (response?.data?.error?.message) {
-  //     case "EMAIL_NOT_FOUND":
-  //       serverErrorMessage =
-  //         "The email you entered is incorrect. Try again.";
-  //       break;
-  //     case "INVALID_PASSWORD":
-  //       serverErrorMessage =
-  //         "The password you entered is incorrect. Try again.";
-  //       break;
-  //     default:
-  //       serverErrorMessage = "Something went wrong. Try again.";
-  //   }
-  //   this.setState({
-  //     ...this.state,
-  //     serverErrorMessage,
-  //   });
-  //   console.error("An unexpected error happened:", response?.data);
-  // });
-
+  loginHandler = () => {
+    this.props.getAuthRequest({
+      email: this.state.formControls.email.value,
+      password: this.state.formControls.password.value,
+    });
+    // .catch(({ response }) => {
+    //   let serverErrorMessage = "";
+    //   switch (response?.data?.error?.message) {
+    //     case "EMAIL_NOT_FOUND":
+    //       serverErrorMessage =
+    //         "The email you entered is incorrect. Try again.";
+    //       break;
+    //     case "INVALID_PASSWORD":
+    //       serverErrorMessage =
+    //         "The password you entered is incorrect. Try again.";
+    //       break;
+    //     default:
+    //       serverErrorMessage = "Something went wrong. Try again.";
+    //   }
+    //   this.setState({
+    //     ...this.state,
+    //     serverErrorMessage,
+    //   });
+    //   console.error("An unexpected error happened:", response?.data);
+    // });
+  };
   render() {
     return (
       <div className="d-flex justify-content-center flex-grow-1 pt-5">
@@ -90,9 +117,9 @@ class LoginForm extends Form<DispatchProps, IFormControls> {
             >
               Next
             </Button>
-            {this.state.serverErrorMessage.trim().length > 0 ? (
+            {this.props.serverErrorMessage.trim().length > 0 ? (
               <div className={classes.Error}>
-                {this.state.serverErrorMessage}
+                {this.props.serverErrorMessage}
               </div>
             ) : null}
           </form>
@@ -102,4 +129,7 @@ class LoginForm extends Form<DispatchProps, IFormControls> {
   }
 }
 
-export default connect(null, mapDispatchToProps)(LoginForm);
+export default connect(mapStateToProps, {
+  getAuthRequest,
+  errorRequest,
+})(LoginForm);

@@ -17,7 +17,7 @@ import {
   RemoveNoteRequest,
 } from "../actions/notes/types";
 import * as actions from "../actions/notes/notes";
-import { INoteState } from "../reducers/interfaces/INoteState";
+import { INoteState } from "../reducers";
 //import { INote } from "../interfaces/INote";
 
 function* fetchNotes() {

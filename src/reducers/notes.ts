@@ -11,8 +11,8 @@ import {
 } from "../actions/notes/types";
 
 import { Action } from "redux";
-import { INoteState } from "./interfaces/INoteState";
 import { INote } from "../interfaces/INote";
+import { INoteState } from "./index";
 
 const INITIAL_STATE: INoteState = {
   notes: new Array<INote>(),
