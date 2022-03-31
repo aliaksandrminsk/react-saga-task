@@ -6,7 +6,7 @@ import { IFormControls } from "./IFormControl";
 import { Form } from "./Form";
 
 import { getAuthRequest } from "../../actions/auth/auth";
-import { GetAuthRequest } from "../../actions/auth/types";
+import { ErrorRequest, GetAuthRequest } from "../../actions/auth/types";
 import { IApplicationState } from "../../reducers";
 
 // interface DispatchProps {
@@ -30,6 +30,11 @@ interface DispatchProps {
     name: string;
     surname: string;
   }) => GetAuthRequest;
+  errorRequest: ({
+    serverErrorMessage,
+  }: {
+    serverErrorMessage: string;
+  }) => ErrorRequest;
 }
 
 interface StateProps {

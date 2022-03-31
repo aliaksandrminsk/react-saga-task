@@ -3,5 +3,5 @@ import authSagas from "./auth";
 import noteSagas from "./notes";
 
 export default function* rootSaga() {
-  yield all([...authSagas, ...noteSagas]);
+  yield all([...noteSagas, ...authSagas]);
 }

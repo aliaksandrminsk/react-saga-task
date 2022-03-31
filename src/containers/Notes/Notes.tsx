@@ -18,17 +18,17 @@ import {
   setFilterRequest,
 } from "../../actions/notes/notes";
 import { INote } from "../../interfaces/INote";
-import { INoteState } from "../../reducers/interfaces/INoteState";
+import { INoteState } from "../../reducers";
 
 interface State {
   newNoteText: string;
 }
 
 interface DispatchProps {
-  fetchNotes: () => FetchNotesRequest;
-  saveNotes: () => SaveNotesRequest;
-  addNote: (note: INote) => AddNoteRequest;
-  setFilter: (filter: string) => SetFilterRequest;
+  fetchNotesRequest: () => FetchNotesRequest;
+  saveNotesRequest: () => SaveNotesRequest;
+  addNoteRequest: (note: INote) => AddNoteRequest;
+  setFilterRequest: (filter: string) => SetFilterRequest;
 }
 
 interface StateProps {
@@ -51,14 +51,14 @@ function mapStateToProps({ note }: { note: INoteState }): StateProps {
   };
 }
 
-function mapDispatchToProps(): DispatchProps {
-  return {
-    fetchNotes: () => fetchNotesRequest(),
-    saveNotes: () => saveNotesRequest(),
-    addNote: (note: INote) => addNoteRequest(note),
-    setFilter: (filter: string) => setFilterRequest(filter),
-  };
-}
+// function mapDispatchToProps(): DispatchProps {
+//   return {
+//     fetchNotesRequest: () => fetchNotesRequest(),
+//     // saveNotes: () => saveNotesRequest(),
+//     // addNote: (note: INote) => addNoteRequest(note),
+//     // setFilter: (filter: string) => setFilterRequest(filter),
+//   };
+// }
 
 class Notes extends Component<Props, State> {
   noteCounter = 0; //This counter uses to make unique id when we are creating new note.
@@ -87,13 +87,13 @@ class Notes extends Component<Props, State> {
       text: this.state.newNoteText,
       done: false,
     };
-    this.props.addNote(note);
+    this.props.addNoteRequest(note);
     this.setState({ newNoteText: "" });
     this.noteCounter++;
   };
 
   componentDidMount() {
-    this.props.fetchNotes();
+    this.props.fetchNotesRequest();
   }
 
   render() {
@@ -111,7 +111,10 @@ class Notes extends Component<Props, State> {
                 type="radio"
                 name="filterRadio"
                 id="filterRadio1"
-                onChange={this.props.setFilter.bind(this, FilterTypes.All)}
+                onChange={this.props.setFilterRequest.bind(
+                  this,
+                  FilterTypes.All
+                )}
                 checked={this.props.filter === FilterTypes.All}
               />
               <label className="form-check-label" htmlFor="filterRadio1">
@@ -125,7 +128,7 @@ class Notes extends Component<Props, State> {
                 type="radio"
                 name="filterRadio"
                 id="filterRadio2"
-                onChange={this.props.setFilter.bind(
+                onChange={this.props.setFilterRequest.bind(
                   this,
                   FilterTypes.COMPLETED
                 )}
@@ -142,7 +145,10 @@ class Notes extends Component<Props, State> {
                 type="radio"
                 name="filterRadio"
                 id="filterRadio3"
-                onChange={this.props.setFilter.bind(this, FilterTypes.WAITING)}
+                onChange={this.props.setFilterRequest.bind(
+                  this,
+                  FilterTypes.WAITING
+                )}
                 checked={this.props.filter === FilterTypes.WAITING}
               />
               <label className="form-check-label" htmlFor="filterRadio3">
@@ -192,7 +198,7 @@ class Notes extends Component<Props, State> {
           <div className="d-flex justify-content-center">
             <button
               type="button"
-              onClick={this.props.saveNotes.bind(this)}
+              onClick={this.props.saveNotesRequest.bind(this)}
               className={"btn btn-primary " + classes.saveButton}
               disabled={isEqual(this.props.notes, this.props.updatedNotes)}
             >
@@ -206,4 +212,9 @@ class Notes extends Component<Props, State> {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Notes);
+export default connect(mapStateToProps, {
+  fetchNotesRequest,
+  saveNotesRequest,
+  addNoteRequest,
+  setFilterRequest,
+})(Notes);

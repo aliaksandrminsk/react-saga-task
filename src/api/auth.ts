@@ -49,12 +49,12 @@ export const getAuth = ({
 
 export const saveUserData = ({
   email,
-  name,
-  surname,
+  name = "",
+  surname = "",
 }: {
   email: string;
-  name: string;
-  surname: string;
+  name?: string;
+  surname?: string;
 }) => {
   return axios.put(
     `${process.env.AXIOS_BASE_URL}/users/${encodeEmail(email)}.json`,

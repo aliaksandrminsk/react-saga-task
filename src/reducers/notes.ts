@@ -77,7 +77,7 @@ export default function notes(
         errorMessage: "",
         filter: (action as SetFilterRequest).filter,
       };
-    case NoteTypes.REMOVE_NOTE_REQUEST:
+    case NoteTypes.REMOVE_NOTE_SUCCESS:
       return {
         ...state,
         errorMessage: "",

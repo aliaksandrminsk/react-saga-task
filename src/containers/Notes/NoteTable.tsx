@@ -1,7 +1,10 @@
 import React, { Component } from "react";
 import { FilterTypes } from "./FilterTypes";
 import { connect } from "react-redux";
-import { RemoveNoteRequest } from "../../actions/notes/types";
+import {
+  ChangeNoteRequest,
+  RemoveNoteRequest,
+} from "../../actions/notes/types";
 import {
   changeNoteRequest,
   removeNoteRequest,
@@ -14,8 +17,8 @@ interface OwnProps {
 }
 
 interface DispatchProps {
-  removeNote: (id: string) => RemoveNoteRequest;
-  changeNote: (id: string) => void;
+  removeNoteRequest: (id: string) => RemoveNoteRequest;
+  changeNoteRequest: (id: string) => ChangeNoteRequest;
 }
 interface StateProps {
   updatedNotes: Array<INote>;
@@ -31,12 +34,12 @@ function mapStateToProps({ note }: { note: INoteState }): StateProps {
   };
 }
 
-function mapDispatchToProps(): DispatchProps {
-  return {
-    changeNote: (id: string) => changeNoteRequest(id),
-    removeNote: (id: string) => removeNoteRequest(id),
-  };
-}
+// function mapDispatchToProps(): DispatchProps {
+//   return {
+//     changeNote: (id: string) => changeNoteRequest(id),
+//     removeNote: (id: string) => removeNoteRequest(id),
+//   };
+// }
 
 class NoteTable extends Component<Props> {
   renderNotes() {
@@ -54,7 +57,7 @@ class NoteTable extends Component<Props> {
                 value=""
                 id={"flexCheckChecked" + note.id}
                 checked={!note.done}
-                onChange={() => this.props.changeNote(note.id)}
+                onChange={() => this.props.changeNoteRequest(note.id)}
               />
               <label
                 className="form-check-label"
@@ -68,7 +71,7 @@ class NoteTable extends Component<Props> {
             <button
               type="button"
               className="btn btn-outline-primary"
-              onClick={() => this.props.removeNote(note.id)}
+              onClick={() => this.props.removeNoteRequest(note.id)}
             >
               Remove
             </button>
@@ -100,4 +103,7 @@ class NoteTable extends Component<Props> {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(NoteTable);
+export default connect(mapStateToProps, {
+  removeNoteRequest,
+  changeNoteRequest,
+})(NoteTable);

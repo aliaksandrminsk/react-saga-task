@@ -31,8 +31,6 @@ function* getAuth({ email, password, name, surname }: GetAuthRequest) {
     password,
   });
 
-  console.log("serverErrorMessage=", serverErrorMessage);
-
   if (serverErrorMessage != null) {
     yield put(actions.errorRequest({ serverErrorMessage }));
   } else {
@@ -42,12 +40,13 @@ function* getAuth({ email, password, name, surname }: GetAuthRequest) {
 
     if (isRegistration) {
       yield call(api.saveUserData, {
-        email: "",
-        name: name ?? "",
-        surname: surname ?? "",
+        email,
+        name,
+        surname,
       });
     } else {
       const { data: userData } = yield call(api.getUserData, { email });
+      console.log("BBBBBBBBBB5 ", userData);
       name = userData.name;
       surname = userData.surname;
     }

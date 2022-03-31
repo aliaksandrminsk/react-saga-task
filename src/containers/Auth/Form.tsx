@@ -2,8 +2,18 @@ import { IFormControl, IFormControls, IValidation } from "./IFormControl";
 import is from "is_js";
 import React, { Component } from "react";
 import Input, { InputProps } from "../../components/UI/Input/Input";
+import { ErrorRequest } from "../../actions/auth/types";
 
-export class Form<T, P extends IFormControls> extends Component<T, P> {
+export class Form<
+  T extends {
+    errorRequest: ({
+      serverErrorMessage,
+    }: {
+      serverErrorMessage: string;
+    }) => ErrorRequest;
+  },
+  P extends IFormControls
+> extends Component<T, P> {
   submitHandler = (event: React.FormEvent) => {
     event.preventDefault();
   };
@@ -64,7 +74,7 @@ export class Form<T, P extends IFormControls> extends Component<T, P> {
       formControls,
       isFormValid,
     });
-    //this.props.errorRequest({ serverErrorMessage: "" });
+    this.props.errorRequest({ serverErrorMessage: "" });
   };
 
   renderInputs() {
