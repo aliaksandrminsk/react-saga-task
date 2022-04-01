@@ -1,4 +1,4 @@
-import React, { Component, useEffect } from "react";
+import React, { useEffect } from "react";
 import Layout from "./hoc/Layout/Layout";
 import { Route, Routes } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -7,7 +7,6 @@ import RegisterForm from "./containers/Auth/RegisterForm";
 import Notes from "./containers/Notes/Notes";
 import Logout from "./components/Logout/Logout";
 import { Navigate } from "react-router-dom";
-import { AutoLoginRequest } from "./actions/auth/types";
 import { autoLoginRequest } from "./actions/auth/auth";
 import { IApplicationState } from "./reducers";
 

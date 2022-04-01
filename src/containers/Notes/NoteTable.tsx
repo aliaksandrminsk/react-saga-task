@@ -1,49 +1,25 @@
-import React, { Component } from "react";
+import React from "react";
 import { FilterTypes } from "./FilterTypes";
-import { connect } from "react-redux";
-import {
-  ChangeNoteRequest,
-  RemoveNoteRequest,
-} from "../../actions/notes/types";
+import { useDispatch, useSelector } from "react-redux";
 import {
   changeNoteRequest,
   removeNoteRequest,
 } from "../../actions/notes/notes";
 import { INote } from "../../interfaces/INote";
-import { INoteState } from "../../reducers";
+import { IApplicationState } from "../../reducers";
 
 interface OwnProps {
   getFilteredNotes: (filter: string) => Array<INote>;
 }
 
-interface DispatchProps {
-  removeNoteRequest: (id: string) => RemoveNoteRequest;
-  changeNoteRequest: (id: string) => ChangeNoteRequest;
-}
-interface StateProps {
-  updatedNotes: Array<INote>;
-  filter: string;
-}
+const NoteTable = (props: OwnProps) => {
+  const filter = useSelector<IApplicationState, string>(
+    (state) => state.note.filter
+  );
+  const dispatch = useDispatch();
 
-type Props = StateProps & DispatchProps & OwnProps;
-
-function mapStateToProps({ note }: { note: INoteState }): StateProps {
-  return {
-    filter: note.filter,
-    updatedNotes: note.updatedNotes,
-  };
-}
-
-// function mapDispatchToProps(): DispatchProps {
-//   return {
-//     changeNote: (id: string) => changeNoteRequest(id),
-//     removeNote: (id: string) => removeNoteRequest(id),
-//   };
-// }
-
-class NoteTable extends Component<Props> {
-  renderNotes() {
-    return this.props.getFilteredNotes(this.props.filter).map((note) => {
+  const renderNotes = () => {
+    return props.getFilteredNotes(filter).map((note) => {
       return (
         <tr key={"note-" + note.id}>
           <td>
@@ -57,7 +33,7 @@ class NoteTable extends Component<Props> {
                 value=""
                 id={"flexCheckChecked" + note.id}
                 checked={!note.done}
-                onChange={() => this.props.changeNoteRequest(note.id)}
+                onChange={() => dispatch(changeNoteRequest(note.id))}
               />
               <label
                 className="form-check-label"
@@ -71,7 +47,7 @@ class NoteTable extends Component<Props> {
             <button
               type="button"
               className="btn btn-outline-primary"
-              onClick={() => this.props.removeNoteRequest(note.id)}
+              onClick={() => dispatch(removeNoteRequest(note.id))}
             >
               Remove
             </button>
@@ -79,31 +55,26 @@ class NoteTable extends Component<Props> {
         </tr>
       );
     });
-  }
+  };
 
-  render() {
-    return (
-      <table className="table table-striped">
-        <thead>
-          <tr>
-            <th style={{ width: "80%" }} scope="col">
-              Note
-            </th>
-            <th style={{ width: "110px" }} scope="col">
-              Status
-            </th>
-            <th style={{ width: "10%" }} scope="col">
-              Action
-            </th>
-          </tr>
-        </thead>
-        <tbody>{this.renderNotes()}</tbody>
-      </table>
-    );
-  }
-}
+  return (
+    <table className="table table-striped">
+      <thead>
+        <tr>
+          <th style={{ width: "80%" }} scope="col">
+            Note
+          </th>
+          <th style={{ width: "110px" }} scope="col">
+            Status
+          </th>
+          <th style={{ width: "10%" }} scope="col">
+            Action
+          </th>
+        </tr>
+      </thead>
+      <tbody>{renderNotes()}</tbody>
+    </table>
+  );
+};
 
-export default connect(mapStateToProps, {
-  removeNoteRequest,
-  changeNoteRequest,
-})(NoteTable);
+export default NoteTable;
