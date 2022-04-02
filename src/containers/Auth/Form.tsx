@@ -11,7 +11,7 @@ import Button from "../../components/UI/Button/Button";
 export type FormProps = {
   title: string;
   formState: IFormControls;
-  setFormState: (state: IFormControls) => any;
+  setFormState: (state: IFormControls) => void;
   authHandler: () => void;
 };
 

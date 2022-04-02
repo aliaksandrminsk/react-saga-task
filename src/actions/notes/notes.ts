@@ -59,36 +59,52 @@ export const saveNotesError = ({
   errorMessage,
 });
 
-export const changeNoteRequest = (id: string): ChangeNoteRequest => ({
+export const changeNoteRequest = ({
+  id,
+}: {
+  id: string;
+}): ChangeNoteRequest => ({
   type: NoteTypes.CHANGE_NOTE_REQUEST,
   id,
 });
 
-export const changeNoteSuccess = (
-  updatedNotes: Array<INote>
-): ChangeNoteSuccess => ({
+export const changeNoteSuccess = ({
+  updatedNotes,
+}: {
+  updatedNotes: Array<INote>;
+}): ChangeNoteSuccess => ({
   type: NoteTypes.CHANGE_NOTE_SUCCESS,
   updatedNotes,
 });
 
-export const addNoteRequest = (note: INote): AddNoteRequest => ({
+export const addNoteRequest = ({ note }: { note: INote }): AddNoteRequest => ({
   type: NoteTypes.ADD_NOTE_REQUEST,
   note,
 });
 
-export const setFilterRequest = (filter: string): SetFilterRequest => ({
+export const setFilterRequest = ({
+  filter,
+}: {
+  filter: string;
+}): SetFilterRequest => ({
   type: NoteTypes.SET_FILTER_REQUEST,
   filter,
 });
 
-export const removeNoteRequest = (id: string): RemoveNoteRequest => ({
+export const removeNoteRequest = ({
+  id,
+}: {
+  id: string;
+}): RemoveNoteRequest => ({
   type: NoteTypes.REMOVE_NOTE_REQUEST,
   id,
 });
 
-export const removeNoteSuccess = (
-  updatedNotes: Array<INote>
-): RemoveNoteSuccess => ({
+export const removeNoteSuccess = ({
+  updatedNotes,
+}: {
+  updatedNotes: Array<INote>;
+}): RemoveNoteSuccess => ({
   type: NoteTypes.REMOVE_NOTE_SUCCESS,
   updatedNotes,
 });

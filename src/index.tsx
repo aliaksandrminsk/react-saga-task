@@ -24,10 +24,6 @@ const store = createStore(
 );
 sagaMiddleware.run(rootSaga);
 
-export const useStore = () => {
-  return store;
-};
-
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>

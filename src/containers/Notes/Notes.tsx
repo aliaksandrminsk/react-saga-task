@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import classes from "./Notes.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import Loader from "../../components/UI/Loader/Loader";
@@ -52,8 +52,7 @@ const Notes = () => {
       text: newNoteText,
       done: false,
     };
-    dispatch(addNoteRequest(note));
-    //this.setState({ newNoteText: "" });
+    dispatch(addNoteRequest({ note }));
     setNewNoteText("");
     noteCounter.current++;
   };
@@ -62,7 +61,10 @@ const Notes = () => {
     dispatch(fetchNotesRequest());
   }, []);
 
-  const completedNotesCount = getFilteredNotes("completed").length;
+  const completedNotesCount = useMemo<number>(
+    () => getFilteredNotes("completed").length,
+    [updatedNotes]
+  );
 
   return (
     <div className="d-flex justify-content-center flex-grow-1 pt-4 pt-sm-5">
@@ -76,7 +78,9 @@ const Notes = () => {
               type="radio"
               name="filterRadio"
               id="filterRadio1"
-              onChange={() => dispatch(setFilterRequest(FilterTypes.All))}
+              onChange={() =>
+                dispatch(setFilterRequest({ filter: FilterTypes.All }))
+              }
               checked={filter === FilterTypes.All}
             />
             <label className="form-check-label" htmlFor="filterRadio1">
@@ -90,7 +94,9 @@ const Notes = () => {
               type="radio"
               name="filterRadio"
               id="filterRadio2"
-              onChange={() => dispatch(setFilterRequest(FilterTypes.COMPLETED))}
+              onChange={() =>
+                dispatch(setFilterRequest({ filter: FilterTypes.COMPLETED }))
+              }
               checked={filter === FilterTypes.COMPLETED}
             />
             <label className="form-check-label" htmlFor="filterRadio2">
@@ -104,7 +110,9 @@ const Notes = () => {
               type="radio"
               name="filterRadio"
               id="filterRadio3"
-              onChange={() => dispatch(setFilterRequest(FilterTypes.WAITING))}
+              onChange={() =>
+                dispatch(setFilterRequest({ filter: FilterTypes.WAITING }))
+              }
               checked={filter === FilterTypes.WAITING}
             />
             <label className="form-check-label" htmlFor="filterRadio3">

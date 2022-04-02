@@ -87,7 +87,7 @@ module.exports = {
     publicPath: "/",
   },
   resolve: {
-    extensions: [".js", ".ts", ".tsx", ".json", ".scss", ".css"]
+    extensions: [".js", ".ts", ".tsx", ".json", ".scss", ".css"],
   },
   optimization: optimization(),
   devServer: {

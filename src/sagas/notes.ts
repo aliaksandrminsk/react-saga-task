@@ -1,25 +1,19 @@
 import {
   takeEvery,
   takeLatest,
-  //take,
+  take,
   call,
   put,
   fork,
 } from "redux-saga/effects";
 import { select } from "redux-saga/effects";
 import * as api from "../api/notes";
-
-import {
-  ChangeNoteRequest,
-  NoteTypes,
-  RemoveNoteRequest,
-} from "../actions/notes/types";
+import { ChangeNoteRequest, NoteTypes } from "../actions/notes/types";
 import * as actions from "../actions/notes/notes";
 import { IApplicationState } from "../reducers";
 import { INote } from "../interfaces/INote";
 
 function* fetchNotes() {
-  console.log("BBBBBBBBBBBBBBBBBB fetchNotes");
   const state: IApplicationState = yield select();
   const { email } = state.auth;
 
@@ -49,8 +43,7 @@ function* fetchNotes() {
 }
 
 function* watchFetchNotesRequest() {
-  console.log("BBBBBBBBBBBBBBBBBB watchFetchNotesRequest");
-  yield takeEvery(NoteTypes.FETCH_NOTES_REQUEST, fetchNotes);
+  yield takeLatest(NoteTypes.FETCH_NOTES_REQUEST, fetchNotes);
 }
 
 function* saveNotes() {
@@ -67,11 +60,6 @@ function* saveNotes() {
       data[item.id] = { text: item.text, done: item.done };
       counter++;
     }
-    // await axios.put(
-    //   `${process.env.AXIOS_BASE_URL}/users/${encodeEmail(email)}/data.json/`,
-    //   data
-    // );
-
     yield call(api.saveNotes, { email, data });
     yield put(actions.saveNotesSuccess({ updatedNotes }));
   } catch (error) {
@@ -101,14 +89,14 @@ function* changeNote({ id }: ChangeNoteRequest) {
       };
     }
   });
-  yield put(actions.changeNoteSuccess(newUpdatedNotes));
+  yield put(actions.changeNoteSuccess({ updatedNotes: newUpdatedNotes }));
 }
 
 function* watchChangeNoteRequest() {
-  yield takeLatest(NoteTypes.CHANGE_NOTE_REQUEST, changeNote);
+  yield takeEvery(NoteTypes.CHANGE_NOTE_REQUEST, changeNote);
 }
 
-function* removeNote({ id }: RemoveNoteRequest) {
+function* removeNote({ id }: { id: string }) {
   const state: IApplicationState = yield select();
   const newUpdatedNotes = [...state.note.updatedNotes];
 
@@ -119,11 +107,14 @@ function* removeNote({ id }: RemoveNoteRequest) {
       break;
     }
   }
-  yield put(actions.removeNoteSuccess(newUpdatedNotes));
+  yield put(actions.removeNoteSuccess({ updatedNotes: newUpdatedNotes }));
 }
 
 function* watchRemoveNoteRequest() {
-  yield takeLatest(NoteTypes.REMOVE_NOTE_REQUEST, removeNote);
+  while (true) {
+    const { id } = yield take(NoteTypes.REMOVE_NOTE_REQUEST);
+    yield call(removeNote, { id });
+  }
 }
 
 const noteSagas = [

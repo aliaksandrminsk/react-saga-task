@@ -7,6 +7,7 @@ import {
 } from "../../actions/notes/notes";
 import { INote } from "../../interfaces/INote";
 import { IApplicationState } from "../../reducers";
+import classes from "./NoteTable.module.css";
 
 interface OwnProps {
   getFilteredNotes: (filter: string) => Array<INote>;
@@ -23,7 +24,12 @@ const NoteTable = (props: OwnProps) => {
       return (
         <tr key={"note-" + note.id}>
           <td>
-            <span style={{ wordBreak: "break-word" }}>{note.text} </span>
+            <span
+              style={{ wordBreak: "break-word" }}
+              className={note.done ? classes.task_done : ""}
+            >
+              {note.text}{" "}
+            </span>
           </td>
           <td>
             <div className="form-check">
@@ -33,7 +39,7 @@ const NoteTable = (props: OwnProps) => {
                 value=""
                 id={"flexCheckChecked" + note.id}
                 checked={!note.done}
-                onChange={() => dispatch(changeNoteRequest(note.id))}
+                onChange={() => dispatch(changeNoteRequest({ id: note.id }))}
               />
               <label
                 className="form-check-label"
@@ -47,7 +53,7 @@ const NoteTable = (props: OwnProps) => {
             <button
               type="button"
               className="btn btn-outline-primary"
-              onClick={() => dispatch(removeNoteRequest(note.id))}
+              onClick={() => dispatch(removeNoteRequest({ id: note.id }))}
             >
               Remove
             </button>
