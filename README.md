@@ -1,6 +1,6 @@
 # React-Redux-Saga Example
 
-This project is a to-do list with authorization. Technologies: [Redux-Saga](https://redux-saga.js.org/), [TypeScript](https://www.typescriptlang.org/), [Webpack](https://webpack.js.org/), [Bootstrap](https://getbootstrap.com/) and [React Testing Library](https://testing-library.com/).
+This project is a to-do list with authorization. Technologies: [React Hooks](https://reactjs.org/), [Redux-Saga](https://redux-saga.js.org/), [TypeScript](https://www.typescriptlang.org/), [Webpack](https://webpack.js.org/), [Bootstrap](https://getbootstrap.com/) and [React Testing Library](https://testing-library.com/).
 
 To run the package.
 
