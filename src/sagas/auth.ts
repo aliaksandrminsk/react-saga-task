@@ -1,4 +1,4 @@
-import { takeEvery, call, put, fork, takeLatest } from "redux-saga/effects";
+import { call, put, fork, takeLatest } from "redux-saga/effects";
 import {
   AuthTypes,
   AutoLogoutRequest,
@@ -95,7 +95,7 @@ function* watchAutoLoginRequest() {
 }
 
 function* autoLogout({ time }: AutoLogoutRequest) {
-  yield call(delay, 5 * 1000);
+  yield call(delay, time * 1000);
   yield put(actions.logoutRequest());
 }
 
