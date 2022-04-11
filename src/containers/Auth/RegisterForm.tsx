@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { getAuthRequest } from "../../actions/auth/auth";
 import Form, { FormProps } from "./Form";
 import { IFormControls } from "./IFormControl";
@@ -54,7 +54,7 @@ const RegisterForm = (FormComponent: React.FC<FormProps>) => () => {
     },
   });
 
-  const registerHandler = function () {
+  const registerHandler = useCallback(() => {
     dispatch(
       getAuthRequest({
         email: formState.formControls.email.value,
@@ -63,7 +63,7 @@ const RegisterForm = (FormComponent: React.FC<FormProps>) => () => {
         surname: formState.formControls.surname.value,
       })
     );
-  };
+  }, [formState]);
 
   return (
     <FormComponent

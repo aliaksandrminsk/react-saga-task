@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { getAuthRequest } from "../../actions/auth/auth";
 import Form, { FormProps } from "./Form";
 import { IFormControls } from "./IFormControl";
@@ -37,14 +37,14 @@ const LoginForm = (FormComponent: React.FC<FormProps>) => () => {
     },
   });
 
-  const loginHandler = function () {
+  const loginHandler = useCallback(() => {
     dispatch(
       getAuthRequest({
         email: formState.formControls.email.value,
         password: formState.formControls.password.value,
       })
     );
-  };
+  }, [formState]);
 
   return (
     <FormComponent
