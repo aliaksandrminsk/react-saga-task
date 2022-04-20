@@ -83,4 +83,4 @@ const NoteTable = (props: OwnProps) => {
   );
 };
 
-export default NoteTable;
+export default React.memo(NoteTable);

@@ -1,4 +1,10 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import classes from "./Notes.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import Loader from "../../components/UI/Loader/Loader";
@@ -35,16 +41,19 @@ const Notes = () => {
     (state) => state.note.filter
   );
 
-  const getFilteredNotes = (filter: string): Array<INote> => {
-    return updatedNotes.filter((value) => {
-      if (filter === FilterTypes.COMPLETED) {
-        return value.done;
-      } else if (filter === FilterTypes.WAITING) {
-        return !value.done;
-      }
-      return true;
-    });
-  };
+  const getFilteredNotes = useCallback(
+    (filter: string): Array<INote> => {
+      return updatedNotes.filter((value) => {
+        if (filter === FilterTypes.COMPLETED) {
+          return value.done;
+        } else if (filter === FilterTypes.WAITING) {
+          return !value.done;
+        }
+        return true;
+      });
+    },
+    [updatedNotes]
+  );
 
   const onAddNoteHandler = () => {
     const note: INote = {
